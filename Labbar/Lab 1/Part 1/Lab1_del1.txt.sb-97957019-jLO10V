@@ -1,0 +1,57 @@
+Objektorienterad programvaruutveckling fortsättningskurs
+========================================================
+
+Laboration 1 - Del 1
+====================
+
+Grupp 12
+Josefin Ulfenborg
+Therese Sturesson
+=================
+
+1. Vad är skillnaden på GoldModel och GameModel och hur är de relaterade till varandra?
+: GameModel är en abstrakt (super)klass för alla game model classes, GoldModel är en sådan och därmed extend:ar den från GameModel. I GameModel finns bara en abstrakt metod, public abstract void gameUpdate(…),  som även kastar ett GameOverException och eftersom GoldModel är en subklass så måste den ha med en implementation av den här metoden (med exakt samma metodsignatur, minus abstract). Alla metoder som ärver från GameModel kommer ha en egen implementation av gameUpdate, dvs den kommer med stor sannolikhet se annorlunda ut för olika spel. Däremot så är de andra metoderna som finns i GameModel, t.ex setGameboardState, någonting som är gemensamt för alla kommande subklasser och kommer på så vis alltid göra samma sak i GameModel.  
+
+2. Vilken metod utför själva ritandet av ‘Gold coins’ i spelet ‘Gold game’? 
+: RectangularTile samt RoundTile utför ritandet av komponenterna i spelet (dock så är det main och GUIView som står för frame:n).
+
+3. Vilken metod är det som anropar metoden som ritar ut ‘Gold coins’? 
+: Det är draw-metoden i RoundTile som ritar ut och i GoldModel sätts färgen på coinsen med en klassvariabel, men det är paintComponent i GameView som anropar draw-metoden. 
+
+4. Vad är syftet med GameFactory och hur kan en GameFactory utvidgas för att få med ett ‘Snake game’?
+: Syftet med GameFactory är att skapa ett nytt spel, och den kan utvidgas genom att lägga till fler spelnamn i sträng-array:en och även utvidga if-satsen så att den kan kolla fler argument, och därmed returnera andra spel. 
+
+5. Var återfinns beräkningen och kontrollen av de rörelser som ‘Gold eaters’ gör? 
+: gameUpdate i GoldModel uppdaterar positionen med en inparameter som är det senaste knapptrycket. Det första den gör är att anropa på updateDirection vilket sätter ett nytt värde på direction, beroende på vilken piltangent man klickade på, och ändrar inget om man klickar på en annan tangent. Därefter så sätter den ett nytt värde (en ny position) på “collector” genom att anropa getNextCollectorPos, vilket är en metod som returnerar en ny position. X- eller Y-led är beroende av Direction (enum), vilket innebär att om man klickade på höger piltangent, kommer den skicka (1,0), vilket innebär att positionen uppdateras med ett steg åt höger. 
+
+6. Hur lagras ett spelbräde och i vilken klass?
+: I GameModel finns det två instansvariabler, gameboardState och gameboardSize, där spelbrädet sparas, dels var saker ligger på spelbrädet (sparat i en matris), dels storleken på hela brädet. Det finns redan en default-storlek på spelbrädet (som sätts i Constants.java), men med hjälp av metoderna setGameboardState så bestäms vad som finns på varje koordinat på spelbrädet. 
+
+7. Beskriv arbetsflödet av programmet.
+: När man startar programmet är det Main som kommer köras först, varpå Main anropar på GUIView, när panelen skall skapas, med en GameFactory (som är en IGameFactory) som inparameter. 
+- I  GUIView kommer det dels skapas en ny instans av GameView, vilket är klassen som ritar ut själva spelbrädet, samt håller bilden uppdaterad.
+- Det kommer även skapas en ny instans av GameController, som lyssnar på knapptryck från användaren och skickar sedan vidare det till ens GameModel. i GUIView kommer den stoppa det aktuella spelet samt starta ett nytt, med hjälp av metoderna som finns i GameController.
+- I GameFactory kommer ett nytt spel att skapas, i det här fallet GoldModel, vilket är själva spelet. 
+- Eftersom GoldModel ärver från GameModel(vilket är en abstrakt klass), vet vi att den kommer använda sig av metoderna som finns i GameModel, specifikt implementationen av den abstrakta metoden som finns i GameModel (gameUpdate). 
+- I GoldModel finns även metoderna för att uppdatera spelet kontinuerligt, lägga till mynten på spelplanen med addCoin samt att GoldModel använder sig av RoundTile (som ärver från GameTile) för att rita alla komponenter. Även så kastar gameUpdate en exception av typen GameOverException som ärver från Exception, så varje spel kommer kasta sin egen exception eftersom att varje nytt spel kommer ha sig en egen implementation av gameUpdate. 
+
+8. En plan för deluppgift 2.
+: Vår nya klass SnakeModel kommer bli uppbyggd på samma sätt som GoldModel med att den t.ex kommer behöva en egen implementation av gameUpdate. Vi tänker att vi kommer behålla de flesta metodsignaturerna som redan finns med ändra på implementationerna av dem, speciellt i addCoin - eftersom vi inte vill att maten skall flyttas kontinuerligt utan endast när ormen har tagit matbiten. Det vi tänker nu är att vi kommer även behöva en metod/klass för att rita ut ormen och bara ändra på de delar av den som flyttas, d.v.s huvudet och svansen (om man tänker att man flyttar fram svansen till bakom huvudet efter varje rörelse framåt). 
+Vi tänker som avslut blir det att antingen så kommer ormen krockar med sig själv eller blir för stor för spelplanen. 
+För att ormen inte ska kunna backa:
+- t.ex: man skall inte kunna trycka uppåt när ormen går nedåt (den ska m.a.o inte kunna gå i motsatt riktning). 
+Som subklass till GameTile tänker vi eventuellt att vi antingen gör huvudet större eller gör huvudet i en annan färg, men till kroppen tänker eventuellt använda RectangularTile.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
