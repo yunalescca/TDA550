@@ -4,7 +4,7 @@ package decorator;
  * Created by Yunalescca on 2017-08-08.
  */
 
-//EXAMPLE FROM DEREK BANAS (YOUTUBE)
+//EXAMPLE FROM LECTURE SLIDES
 public class Main {
 
     public static void main(String[] args){
